@@ -2,8 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { Configuration, OpenAIApi } from 'openai';
 
-import post from '../mongodb/models/post.js';
-
 dotenv.config();
 
 const router = express.Router();
@@ -27,7 +25,7 @@ router.route('/').post(async (req, res) => {
     res.status(200).json({ photo: image });
   } catch (error) {
     console.log(error);
-    res.status(500).send(error?.response.data.error.message);
+    res.status(500).send(error?.response.data.error.message || 'Something went wrong');
   }
 });
 

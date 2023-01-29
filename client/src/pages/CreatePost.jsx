@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { json, useNavigate } from 'react-router-dom';
 
 import { getRandomPrompt } from '../utils';
 import { preview } from '../assets';
@@ -28,18 +28,43 @@ function CreatePost() {
           body: JSON.stringify({ prompt: form.prompt }),
         });
         const data = await response.json();
+        console.log(data);
         setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
       } catch (error) {
-        alert(error);
+        alert(
+          'You wrote something which is not allowed in our guidelines'
+        );
       } finally {
         setGeneratingImg(false);
       }
-    }else{
+    } else {
       alert('Plese enter a prompt');
     }
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = async e => {
+    e.preventDefault();
+    if (form.photo && form.prompt) {
+      setLoading(true);
+      try {
+        const response = await fetch('http://localhost:8080/api/v1/post', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(form),
+        });
+        await response.json();
+        navigate('/');
+      } catch (error) {
+        alert(error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      alert('Please enter prompt and generate an image');
+    }
+  };
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
