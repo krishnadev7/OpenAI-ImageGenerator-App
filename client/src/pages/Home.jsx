@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { FormField, Loader } from '../components';
+import { Card, FormField, Loader } from '../components';
 
 const RenderCards = ({ data, title }) => {
   if (data?.length > 0) {
@@ -29,9 +29,8 @@ function Home() {
         const result = await response.json();
         setAllPosts(result.data.reverse());
       }
-    } catch (error) {
-      console.log(error.message);
-      alert(error);
+    } catch (err) {
+      alert(err);
     } finally {
       setLoading(false);
     }
